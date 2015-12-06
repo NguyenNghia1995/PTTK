@@ -6,8 +6,6 @@ using namespace std;
 #define null NULL
 #define NEIGHBOR 1
 
-//Bai 1:
-
 enum BaiTap
 {
 	BAITAP1 = 1,
@@ -16,6 +14,8 @@ enum BaiTap
 	BAITAP4 = 4,
 	EXIT = 8
 };
+
+#pragma region BAI1
 
 void PrintOutput(int *a, int n)
 {
@@ -41,6 +41,9 @@ void Ex1(int i, int n, int *a, int &number)
 	}
 }
 
+#pragma endregion
+
+#pragma region BAI2
 void InitCheck(bool *check, int n)
 {
 	for (int i = 0; i < n; i++)
@@ -74,9 +77,49 @@ void Ex2(int i, int n, int *a, bool *check, int &count)
 		check[j - 1] = false;
 	}
 }
+#pragma endregion
+
+#pragma region BAI3
+void PrintOutput(bool *s, int n, int *a)
+{
+	cout << "(";
+	for (int i = 0; i < n; i++)
+	{
+		if (s[i] == true)
+			cout << a[i] << ", ";
+	}
+	cout << "\t)" << endl;
+}
+
+void Ex3(int i, int &sum, bool *s, int M, int *a, int n)
+{
+	for (int j = i; j < n; j++) //khả năng có thể chọn
+	{
+		s[j] = true;
+		sum += a[j];	//tính sum tạm thời
+		if (sum < M)
+			Ex3(j + 1, sum, s, M, a, n);
+		if (sum == M)
+		{
+			PrintOutput(s, n, a);
+			s[j] = false;
+			sum -= a[j];
+			Ex3(j + 1, sum, s, M, a, n);
+		}
+		else
+		{
+			s[j] = false;
+			sum -= a[j];
+		}
+	}
+}
+#pragma endregion 
+
+#pragma region BAI4
 
 void PrintMatrix(int **a, int n)
 {
+	cout << "MA TRAN KE BIEU DIEN DO THI" << endl;
 	for (int i = 0; i < n; i++)
 	{
 		for (int j = 0; j < n; j++)
@@ -112,80 +155,56 @@ void InitMatrixFromFile(int **&a, int &n, char* fileName)
 				if (i == j)
 					a[i][j] = 1;
 				else
-				a[i][j] = 0;
+					a[i][j] = 0;
 			}
 		}
-		
+
 		while (!f.eof())
 		{
 			f >> v1;
 			f >> v2;
-			a[v1 - 1][v2 - 1] = a[v2 - 1][v1 - 1] = 1;
+			a[v1][v2] = a[v2][v1] = 1;
 		}
 	}
 
-	
+
 }
-
-void Ex4(int source, int destination, int **a, int n, bool *check)
-{
-	for (int j = 1; j <= n; j++)
-	{
-		if (a[source - 1][j - 1] == NEIGHBOR && check[j-1] == false)
-		{
-			
-		}
-	}
-}
-
-
 void PrintPath(int source, int destination, int *trace)
 {
 	int current = destination;
-	cout << destination;
+	cout << destination << " > ";
 	while (current != source)
 	{
-		cout << trace[current];
+		cout << trace[current] << " > ";
 		current = trace[current];
 	}
+	cout << endl;
 }
 
-
-void PrintOutput(bool *s, int n, int *a)
+void Ex4(int constSource, int source, int destination, int **a, int n, bool *check, int* trace)
 {
-	cout << "(";
-	for (int i = 0; i < n; i++)
+	for (int j = 0; j < n; j++)
 	{
-		if (s[i] == true)
-			cout << a[i] << ", ";
-	}
-	cout << "\t)" << endl;
-}
-
-void Ex3(int i, int &sum, bool *s, int M, int *a, int n)
-{
-	for (int j = i; j < n; j++) //khả năng có thể chọn
-	{
-		s[i] = true;
-		sum += a[i];	//tính sum tạm thời
-		if (sum > M)
+		if (a[source][j] == NEIGHBOR && check[j] == false)
 		{
-			s[i] = false;
+			trace[j] = source;
+			if (j != destination)
+			{
+				check[j] = true;
+				Ex4(constSource, j, destination, a, n, check, trace);
+			}
+			else
+			{
+				PrintPath(constSource, destination, trace);
+			}
 		}
-		if (sum < M)
-			Ex3(i + 1, sum, s, M, a, n);
-		else
-			if (sum == M)
-				PrintOutput(s, n, a);
-
-		s[i] = false;
-
 	}
 }
+#pragma endregion
 
+#pragma region MENU
 void Menu()
 {
-	
 	while (true)
 	{
 		cout << "PHAN TICH-THIET KE THUAT TOAN" << endl;
@@ -199,16 +218,16 @@ void Menu()
 		cout << "Nhap so 3 de giai bai 3" << endl;
 		cout << "Nhap so 4 de giai bai 4" << endl;
 		cout << "Nhan phim 8 de THOAT khoi chuong trinh" << endl;
-		
+
 		int baitap = 0;
-	
+
 		cin >> baitap;
 		switch (baitap)
 		{
 		case BAITAP1:
 		{
 			system("cls");
-			int n = 0; 
+			int n = 0;
 			cout << "Nhap n: = ";
 			cin >> n;
 			int count = 0;
@@ -226,7 +245,7 @@ void Menu()
 			cin >> n;
 			int count = 0;
 			int *a = new int[n];
-			
+
 			bool *check = new bool[n];
 			InitCheck(check, n);
 			Ex2(0, n, a, check, count);
@@ -249,21 +268,21 @@ void Menu()
 		{
 			system("cls");
 
-			/*int TRACE[100];
+			int TRACE[100];
 			int **a = null;
 			int n = 0;
 			InitMatrixFromFile(a, n, FILENAME);
 			PrintMatrix(a, n);
 			bool *check = new bool[n];
-			int source = 1;
-			int destination = 6;
-			Ex4(source, destination, a, n, check);*/
-
-			int TRACE[10];
-			TRACE[2] = 1;
-			TRACE[5] = 2;
-			TRACE[7] = 5;
-			PrintPath(1, 7, TRACE);
+			InitCheck(check, n);
+			int source = 0;
+			int destination = 0;
+			cout << "Nhap dinh (dinh tu 0 toi 9) bat dau Source: = ";
+			cin >> source;
+			cout << "Nhap dinh (dinh tu 0 toi 9) ket thuc Destination: = ";
+			cin >> destination;
+			
+			Ex4(source,source, destination, a, n, check, TRACE);
 		}
 		break;
 		case EXIT:
@@ -272,10 +291,10 @@ void Menu()
 		}
 		break;
 		default:
-		{
+		{	system("cls");
 			cout << "Phim khong hop le" << endl;
 		}
-			break;
+		break;
 		}
 
 		cout << "Nhan phim 5 de quay lai Menu" << endl;
@@ -288,8 +307,12 @@ void Menu()
 	}
 }
 
+#pragma endregion
+
+#pragma region MAIN
 int main()
 {
 	Menu();
 	return 0;
 }
+#pragma endregion
