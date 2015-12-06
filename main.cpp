@@ -4,6 +4,7 @@ using namespace std;
 #include <fstream>
 #define FILENAME "Graph.txt"
 #define null NULL
+#define NEIGHBOR 1
 
 //Bai 1:
 
@@ -126,9 +127,15 @@ void InitMatrixFromFile(int **&a, int &n, char* fileName)
 	
 }
 
-void Ex4(int source, int destination, int **a, int n)
+void Ex4(int source, int destination, int **a, int n, bool *check)
 {
-	
+	for (int j = 1; j <= n; j++)
+	{
+		if (a[source - 1][j - 1] == NEIGHBOR && check[j-1] == false)
+		{
+			if ()
+		}
+	}
 }
 
 void PrintOutput(bool *s, int n, int *a)
@@ -237,10 +244,10 @@ void Menu()
 			int n = 0;
 			InitMatrixFromFile(a, n, FILENAME);
 			PrintMatrix(a, n);
-
+			bool *check = new bool[n];
 			int source = 1;
 			int destination = 6;
-			Ex4(source, destination, a, n);
+			Ex4(source, destination, a, n, check);
 		}
 		break;
 		case EXIT:
