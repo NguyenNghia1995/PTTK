@@ -1,7 +1,9 @@
 ﻿#include <iostream>
 using namespace std;
 
-
+#include <fstream>
+#define FILENAME "Graph.txt"
+#define null NULL
 
 //Bai 1:
 
@@ -72,9 +74,93 @@ void Ex2(int i, int n, int *a, bool *check, int &count)
 	}
 }
 
-void InitMatrixFromFile(char* fileName)
+void PrintMatrix(int **a, int n)
 {
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cout << a[i][j] << " ";
+		}
+		cout << "\n";
+	}
+	cout << "\n";
+}
 
+void InitMatrixFromFile(int **&a, int &n, char* fileName)
+{
+	fstream f;
+	int v1, v2;
+	f.open(fileName, std::ios::in);
+	if (!f.is_open())
+		cout << "Khong the mo file" << endl;
+	else
+	{
+		f >> n;
+		a = new int*[n];
+		for (int i = 0; i < n; i++)
+		{
+			a[i] = new int[n];
+		}
+
+
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				if (i == j)
+					a[i][j] = 1;
+				else
+				a[i][j] = 0;
+			}
+		}
+		
+		while (!f.eof())
+		{
+			f >> v1;
+			f >> v2;
+			a[v1 - 1][v2 - 1] = a[v2 - 1][v1 - 1] = 1;
+		}
+	}
+
+	
+}
+
+void Ex4(int source, int destination, int **a, int n)
+{
+	
+}
+
+void PrintOutput(bool *s, int n, int *a)
+{
+	cout << "(";
+	for (int i = 0; i < n; i++)
+	{
+		if (s[i] == true)
+			cout << a[i] << ", ";
+	}
+	cout << "\t)" << endl;
+}
+
+void Ex3(int i, int &sum, bool *s, int M, int *a, int n)
+{
+	for (int j = i; j < n; j++) //khả năng có thể chọn
+	{
+		s[i] = true;
+		sum += a[i];	//tính sum tạm thời
+		if (sum > M)
+		{
+			s[i] = false;
+		}
+		if (sum < M)
+			Ex3(i + 1, sum, s, M, a, n);
+		else
+			if (sum == M)
+				PrintOutput(s, n, a);
+
+		s[i] = false;
+
+	}
 }
 
 void Menu()
@@ -132,11 +218,29 @@ void Menu()
 		case BAITAP3:
 		{
 			system("cls");
+
+
+			int sum = 0, n = 6, M = 11;
+			//bool *s = new bool[n];
+			//int *a = new int[n] = {1,2,3,3,5};
+			int a[6] = { 7, 1, 4, 3, 5, 6 };
+			bool s[6] = { false, false, false, false, false, false };
+
+			Ex3(1, sum, s, M, a, n);
 		}
 		break;
 		case BAITAP4:
 		{
 			system("cls");
+
+			int **a = null;
+			int n = 0;
+			InitMatrixFromFile(a, n, FILENAME);
+			PrintMatrix(a, n);
+
+			int source = 1;
+			int destination = 6;
+			Ex4(source, destination, a, n);
 		}
 		break;
 		case EXIT:
