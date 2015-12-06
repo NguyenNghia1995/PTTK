@@ -133,10 +133,23 @@ void Ex4(int source, int destination, int **a, int n, bool *check)
 	{
 		if (a[source - 1][j - 1] == NEIGHBOR && check[j-1] == false)
 		{
-			if ()
+			
 		}
 	}
 }
+
+
+void PrintPath(int source, int destination, int *trace)
+{
+	int current = destination;
+	cout << destination;
+	while (current != source)
+	{
+		cout << trace[current];
+		current = trace[current];
+	}
+}
+
 
 void PrintOutput(bool *s, int n, int *a)
 {
@@ -187,10 +200,8 @@ void Menu()
 		cout << "Nhap so 4 de giai bai 4" << endl;
 		cout << "Nhan phim 8 de THOAT khoi chuong trinh" << endl;
 		
-		
 		int baitap = 0;
-		
-		
+	
 		cin >> baitap;
 		switch (baitap)
 		{
@@ -224,22 +235,21 @@ void Menu()
 		break;
 		case BAITAP3:
 		{
+
 			system("cls");
-
-
 			int sum = 0, n = 6, M = 11;
 			//bool *s = new bool[n];
 			//int *a = new int[n] = {1,2,3,3,5};
 			int a[6] = { 7, 1, 4, 3, 5, 6 };
 			bool s[6] = { false, false, false, false, false, false };
-
-			Ex3(1, sum, s, M, a, n);
+			Ex3(0, sum, s, M, a, n);
 		}
 		break;
 		case BAITAP4:
 		{
 			system("cls");
 
+			/*int TRACE[100];
 			int **a = null;
 			int n = 0;
 			InitMatrixFromFile(a, n, FILENAME);
@@ -247,7 +257,13 @@ void Menu()
 			bool *check = new bool[n];
 			int source = 1;
 			int destination = 6;
-			Ex4(source, destination, a, n, check);
+			Ex4(source, destination, a, n, check);*/
+
+			int TRACE[10];
+			TRACE[2] = 1;
+			TRACE[5] = 2;
+			TRACE[7] = 5;
+			PrintPath(1, 7, TRACE);
 		}
 		break;
 		case EXIT:
